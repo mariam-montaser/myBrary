@@ -1,0 +1,22 @@
+*use npm package
+-express-ejs-layouts
+-dotenv: create .env file and store db url in there
+
+ *use git in simple way:
+-git init
+-create .gitignore and store .env and node_modules in it
+-git add .
+-git commet -m "intial setup"
+-create new repo in my github account
+-type the giving commands:
+	-git remote add origin https://github.com/mariam-montaser/myBrary.git
+
+*deploy the app on heroku using heroku cli & git:
+	-heroku login
+	-heroku git:remote -a my-brary-app
+	-git push -u origin master
+
+*use mongodb atlas: make cluster and save data online
+
+*make search feature: using regular expression and mongodb simply
+

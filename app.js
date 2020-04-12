@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const expressLayouts = require('express-ejs-layouts');
 
 const indexRouter = require('./routes/index.routes');
+const authorsRouter = require('./routes/authors.routes');
 
 const app = express();
 
@@ -25,9 +26,11 @@ app.set('view options', { layout: 'layouts/layout.ejs' });
 app.set('layout', 'layouts/layout');
 app.use(expressLayouts);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ limit: '10mb', extended: false }));
 
 // routes
 app.use('/', indexRouter);
+app.use('/authors', authorsRouter);
 
 
 app.listen(process.env.PORT || 3000, () => {

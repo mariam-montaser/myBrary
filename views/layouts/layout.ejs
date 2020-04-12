@@ -4,15 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= pageTitle%></title>
+    <title>My Brary</title>
 </head>
 
 <body>
-    before
-    <br>
-    <%-body%>
-    <br>
-    after
+    <%- include('../partials/header') %>
+    <%- include('../partials/message') %>
+    <%- body %>
 </body>
 
 </html>
