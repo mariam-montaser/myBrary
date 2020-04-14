@@ -1,6 +1,8 @@
 @import 'shared/variables.css';
+@import 'shared/fonts.css';
 @import 'shared/header.css';
 @import 'shared/buttons.css';
+@import 'shared/form.css';
 
 *,*::before, *::after{
     box-sizing: border-box;
@@ -9,6 +11,7 @@
 :root{
     font-size: 20px;
     color: var(--color-text-light);
+    font-family: 'Gotham Rounded';
 }
 
 body{

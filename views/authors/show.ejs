@@ -1,5 +1,5 @@
 <h2 class="page-header"><%= author.name%></h2>
-<div>
+<div class="btn-row">
     <a class="btn btn-primary" href="/authors/edit/<%= author._id%>">Edit</a>
     <%- include('../partials/deleteForm', {url: `/authors/${author._id}`}) %>
 </div>
