@@ -13,12 +13,17 @@
     <script defer src="https://unpkg.com/filepond/dist/filepond.js"></script>
     <script defer src="js/fileupload.js"></script> -->
     <title>My Brary</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 
 <body>
-    <%- include('../partials/header') %>
-    <%- include('../partials/message') %>
-    <%- body %>
+    <div class="container">
+        <%- include('../partials/header') %>
+        <div class="inner-container">
+            <%- include('../partials/message') %>
+            <%- body %>
+        </div>
+    </div>
 </body>
 
 </html>

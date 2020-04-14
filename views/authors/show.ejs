@@ -1,6 +1,6 @@
-<h2><%= author.name%></h2>
+<h2 class="page-header"><%= author.name%></h2>
 <div>
-    <a href="/authors/edit/<%= author._id%>">Edit</a>
+    <a class="btn btn-primary" href="/authors/edit/<%= author._id%>">Edit</a>
     <%- include('../partials/deleteForm', {url: `/authors/${author._id}`}) %>
 </div>
 <% if(books.length > 0) { %>
