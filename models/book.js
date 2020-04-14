@@ -1,8 +1,8 @@
-const path = require('path');
+const path = require('path');  // multer
 
 const mongoose = require('mongoose');
 
-const coverBasePath = 'uploads/bookCovers';
+const coverBasePath = 'uploads/bookCovers'; // multer
 
 const bookSchema = new mongoose.Schema({
     title: {
@@ -12,10 +12,18 @@ const bookSchema = new mongoose.Schema({
     description: {
         type: String
     },
-    coverImageName: {
+    coverImageName: { //multer
         type: String,
         required: true
     },
+    // coverImage: {
+    //     type: Buffer,
+    //     required: true
+    // },
+    // coverImageType: {
+    //     type: String,
+    //     required: true
+    // },
     publishDate: {
         type: Date,
         required: true
@@ -36,11 +44,19 @@ const bookSchema = new mongoose.Schema({
     }
 });
 
+// multer
 bookSchema.virtual('coverImagePath').get(function () {
     if (this.coverImageName) {
         return (path.join('/', coverBasePath, this.coverImageName));
     }
 })
 
+// filepond
+// bookSchema.virtual('coverImagePath').get(function () {
+//     if (this.coverImage && this.coverImageType) {
+//         return `data:${this.coverImageType};charset=utf-8;base64,${this.coverImage.toString('base64')}`
+//     }
+// })
+
 module.exports = mongoose.model('Book', bookSchema);
-module.exports.coverBasePath = coverBasePath;
+module.exports.coverBasePath = coverBasePath; // multer

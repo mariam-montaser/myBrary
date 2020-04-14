@@ -4,10 +4,12 @@ const path = require('path');
 const Book = require('../models/book');
 const Author = require('../models/author');
 
-const uploadedPath = path.join('public', Book.coverBasePath);
+const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+const uploadedPath = path.join('public', Book.coverBasePath); //multer
 
 exports.newBookPage = async (req, res) => {
-    renderPage(res, new Book());
+    renderPage(res, new Book(), 'new');
     // try {
     //     const authors = await Author.find();
     //     const book = new Book();
@@ -21,24 +23,25 @@ exports.newBookPage = async (req, res) => {
 }
 
 exports.createBook = async (req, res) => {
-    console.log(req.body.publishDate);
-    console.log(req.body.author);
-    const fileName = (req.file != null) ? req.file.filename : null;
+    console.log(req.body)
+    const fileName = (req.file) ? req.file.filename : null; //multer
     const book = new Book({
         title: req.body.title,
         author: req.body.author,
         description: req.body.description,
         pagesCount: req.body.pagesCount,
-        coverImageName: fileName,
+        coverImageName: fileName, //multer
         publishDate: new Date(req.body.publishDate)
     });
+    // filepond
+    // saveCover(book, req.body.cover)
     try {
         const newBook = await book.save();
-        // res.redirect(`/books/${newBook._id}`);
-        res.redirect('/books');
+        res.redirect(`/books/${newBook._id}`);
     } catch (error) {
-        removeBookCover(book.coverImageName);
-        renderPage(res, book, true);
+        console.log(error)
+        removeBookCover(book, coverImageName); //multer
+        renderPage(res, book, 'new', true);
     }
 }
 
@@ -61,7 +64,51 @@ exports.allBooks = async (req, res) => {
     }
 }
 
-async function renderPage(res, book, hasError = false) {
+exports.getBook = async (req, res) => {
+    try {
+        const book = await Book.findById(req.params.id).populate('author');
+        res.render('books/show', { book })
+    } catch (error) {
+        res.redirect('/');
+    }
+}
+
+exports.editBook = async (req, res) => {
+    const book = await Book.findById(req.params.id);
+    renderPage(res, book, 'edit');
+}
+
+exports.updateBook = async (req, res) => {
+    console.log(req.body)
+    let book;
+    try {
+        book = await Book.findById(req.params.id);
+        const fileName = (req.file) ? req.file.filename : book.coverImageName; //multer
+        book.title = req.body.title;
+        book.author = req.body.author;
+        book.description = req.body.description;
+        book.pagesCount = req.body.pagesCount;
+        book.coverImageName = fileName; //multer
+        book.publishDate = new Date(req.body.publishDate);
+        await book.save();
+        res.redirect(`/books/${book._id}`);
+    } catch (error) {
+        console.log(error)
+        removeBookCover(book, coverImageName); //multer
+        renderPage(res, book, 'edit', true);
+    }
+}
+
+exports.deleteBook = async (req, res) => {
+    try {
+        await Book.findByIdAndRemove(req.params.id);
+        res.redirect('/books')
+    } catch (error) {
+        redirect(`/books/${req.body.id}`);
+    }
+}
+
+async function renderPage(res, book, page, hasError = false) {
     try {
         const authors = await Author.find();
         const data = {
@@ -69,17 +116,29 @@ async function renderPage(res, book, hasError = false) {
             authors
         }
         if (hasError) {
-            data.error = 'Error creating a new book.';
+            data.error = `Error saving book.`;
         }
-        res.render('books/new', data);
+        res.render(`books/${page}`, data);
     } catch (error) {
         res.redirect('/books');
     }
 }
 
-// for deleting cover if there's an error
+// for deleting cover if there's an error // multer
 function removeBookCover(fileName) {
     fs.unlink(path.join(uploadedPath, fileName), err => {
         if (err) console.error(err);
     });
 }
+
+// filepond
+// const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+// function saveCover(book, coverData) {
+//     if (!coverData) return;
+//     const cover = JSON.parse(coverData);
+//     if (cover != null && imageMimeTypes.includes(cover.type)) {
+//         book.coverImage = new Buffer.from(cover.data, 'base64');
+//         book.coverImagetype = cover.type;
+//     }
+
+// }

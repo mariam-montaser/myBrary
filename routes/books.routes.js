@@ -20,7 +20,14 @@ const router = express.Router();
 
 router.get('/', booksControllers.allBooks);
 router.get('/new', booksControllers.newBookPage);
-router.post('/', upload.single('cover'), booksControllers.createBook);
-
+router.post('/',
+    upload.single('cover'), //multer
+    booksControllers.createBook);
+router.get('/:id', booksControllers.getBook);
+router.get('/edit/:id', booksControllers.editBook);
+router.put('/:id',
+    upload.single('cover'), //multer
+    booksControllers.updateBook);
+router.delete('/:id', booksControllers.deleteBook);
 
 module.exports = router;
